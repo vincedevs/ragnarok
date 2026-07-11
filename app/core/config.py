@@ -1,10 +1,12 @@
 """
 APPLICATION CONFIGURATION
 """
+
 from functools import lru_cache
 
 from pydantic import DirectoryPath
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
 
 class Settings(BaseSettings):
     """Application configuration loaded from environment variables"""
@@ -19,10 +21,9 @@ class Settings(BaseSettings):
     retrieval_k: int = 5
 
     model_config = SettingsConfigDict(
-        env_file=".env",
-        env_file_encoding="utf-8",
-        extra="ignore"
+        env_file=".env", env_file_encoding="utf-8", extra="ignore"
     )
+
 
 @lru_cache
 def get_settings() -> Settings:
