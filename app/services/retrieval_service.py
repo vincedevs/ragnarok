@@ -6,8 +6,8 @@ from app.repositories.chroma_repository import ChromaRepository
 class RetrievalService:
     """Retrieves relevant document chunks"""
 
-    def __init__(self) -> None:
-        self._chroma_repository = ChromaRepository()
+    def __init__(self, repository: ChromaRepository) -> None:
+        self._chroma_repository = repository
 
     def retrieve(self, question: str) -> list[Document]:
         """Retrieve relevant chunks"""

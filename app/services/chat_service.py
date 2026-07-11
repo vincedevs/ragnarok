@@ -6,10 +6,15 @@ from app.services.retrieval_service import RetrievalService
 class ChatService:
     """Coordinates the RAG question-answering pipeline"""
 
-    def __init__(self) -> None:
-        self._retrieval_service = RetrievalService()
-        self._prompt_service = PromptService()
-        self._llm_service = LLMService()
+    def __init__(
+        self,
+        retrieval_service: RetrievalService,
+        prompt_service: PromptService,
+        llm_service: LLMService,
+    ) -> None:
+        self._retrieval_service = retrieval_service
+        self._prompt_service = prompt_service
+        self._llm_service = llm_service
 
     def chat(self, question: str) -> str:
         """Answer a user's question"""

@@ -5,8 +5,8 @@ from app.repositories.chroma_repository import ChromaRepository
 class DocumentService:
     """Manage uploaded documents"""
 
-    def __init__(self) -> None:
-        self._repository = ChromaRepository()
+    def __init__(self, repository: ChromaRepository) -> None:
+        self._repository = repository
         self._settings = get_settings()
 
     def list_documents(self) -> list[dict]:

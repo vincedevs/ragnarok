@@ -2,17 +2,13 @@ from typing import Annotated
 
 from fastapi import APIRouter, File, HTTPException, UploadFile, status
 
+from app.dependencies import IngestionServiceDep, StorageServiceDep
 from app.schemas.upload import UploadResponse
-from app.services.ingestion_service import IngestionService
-from app.services.storage_services import StorageService
 
 router = APIRouter(
     prefix="/upload",
     tags=["Upload"],
 )
-
-storage_service = StorageService()
-ingestion_service = IngestionService()
 
 
 @router.post(
@@ -20,7 +16,11 @@ ingestion_service = IngestionService()
     response_model=UploadResponse,
     status_code=status.HTTP_201_CREATED,
 )
-async def upload_pdf(file: Annotated[UploadFile, File(...)]) -> UploadResponse:
+async def upload_pdf(
+    file: Annotated[UploadFile, File(...)],
+    storage_service: StorageServiceDep,
+    ingestion_service: IngestionServiceDep,
+) -> UploadResponse:
     """Upload a PDF document"""
     if file.content_type != "application/pdf":
         raise HTTPException(
