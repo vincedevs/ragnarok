@@ -3,6 +3,7 @@ from typing import Annotated
 from fastapi import APIRouter, File, HTTPException, UploadFile, status
 
 from app.schemas.upload import UploadResponse
+from app.services.ingestion_service import IngestionService
 from app.services.storage_services import StorageService
 
 router = APIRouter(
@@ -11,6 +12,7 @@ router = APIRouter(
 )
 
 storage_service = StorageService()
+ingestion_service = IngestionService()
 
 
 @router.post(
@@ -26,7 +28,11 @@ async def upload_pdf(file: Annotated[UploadFile, File(...)]) -> UploadResponse:
             detail="Only PDF files are supported",
         )
 
-    document_id, _ = storage_service.save_file(file)
+    document_id, path = storage_service.save_file(file)
+
+    ingestion_service.ingest(
+        document_id=document_id, filename=file.filename, pdf_path=path
+    )
 
     return UploadResponse(
         document_id=document_id,
