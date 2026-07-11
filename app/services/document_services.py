@@ -1,4 +1,7 @@
+from loguru import logger
+
 from app.core.config import get_settings
+from app.core.exceptions import DocumentNotFoundError
 from app.repositories.chroma_repository import ChromaRepository
 
 
@@ -13,6 +16,8 @@ class DocumentService:
         return self._repository.list_documents()
 
     def delete_document(self, document_id: str) -> None:
+        logger.info(f"Deleting document '{document_id}'")
+
         documents = self._repository.list_documents()
 
         document = next(
@@ -20,7 +25,7 @@ class DocumentService:
         )
 
         if document is None:
-            return
+            raise DocumentNotFoundError(f"Document '{document_id}' not found")
 
         upload_dir = self._settings.upload_directory
 

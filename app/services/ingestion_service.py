@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from langchain_core.documents import Document
+from loguru import logger
 
 from app.repositories.chroma_repository import ChromaRepository
 from app.services.chunk_service import ChunkService
@@ -22,8 +23,12 @@ class IngestionService:
 
     def ingest(self, document_id: str, filename: str, pdf_path: Path) -> None:
         """Extract, chunk, and store a PDF document"""
+        logger.info(f"Starting ingestion for '{filename}'")
+
         text = self._pdf_service.extract_text(pdf_path)
         chunks = self._chunk_service.split_text(text)
+
+        logger.info(f"Generated {len(chunks)} chunks")
 
         documents = [
             Document(
@@ -38,3 +43,5 @@ class IngestionService:
         ]
 
         self._chroma_repository.add_documents(documents)
+
+        logger.info(f"Successfully indexed '{filename}'")
