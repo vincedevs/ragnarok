@@ -32,6 +32,22 @@ class ChromaRepository:
             query=query, k=k or settings.retrieval_k
         )
 
-    def delete(self, ids: list[str]) -> None:
-        """Delete documents by vector IDs"""
-        self._vector_store.delete(ids=ids)
+    def delete_document(self, document_id: str) -> None:
+        """Delete all vectors belonging to a document"""
+        self._vector_store.delete(where={"document_id": document_id})
+
+    def list_documents(self) -> list[dict]:
+        """Return unique uploaded documents"""
+        collection = self._vector_store.get()
+        documents: dict[str, dict] = {}
+
+        for metadata in collection["metadatas"]:
+            document_id = metadata["document_id"]
+
+            if document_id not in documents:
+                documents[document_id] = {
+                    "document_id": document_id,
+                    "filename": metadata["filename"],
+                }
+
+        return list(documents.values())
