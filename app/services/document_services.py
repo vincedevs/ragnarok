@@ -32,4 +32,4 @@ class DocumentService:
         for file in upload_dir.glob(f"{document_id}_*"):
             file.unlink(missing_ok=True)
 
-        self._repository.delete_document(document_id=document_id)
+        self._repository.delete_document(document_id)

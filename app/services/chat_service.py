@@ -19,6 +19,6 @@ class ChatService:
     def chat(self, question: str) -> str:
         """Answer a user's question"""
         documents = self._retrieval_service.retrieve(question)
-        prompt = self._prompt_service.build(question, documents)
+        prompt = self._prompt_service.build(question=question, documents=documents)
 
         return self._llm_service.generate(prompt)
