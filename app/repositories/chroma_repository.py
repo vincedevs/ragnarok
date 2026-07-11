@@ -24,9 +24,13 @@ class ChromaRepository:
         """Store documents in Chroma"""
         self._vector_store.add_documents(documents=documents)
 
-    def similarity_search(self, query: str, k: int) -> list[Document]:
+    def similarity_search(self, query: str, k: int | None = None) -> list[Document]:
         """Search for similar documents in Chroma"""
-        return self._vector_store.similarity_search(query=query, k=k)
+        settings = get_settings()
+
+        return self._vector_store.similarity_search(
+            query=query, k=k or settings.retrieval_k
+        )
 
     def delete(self, ids: list[str]) -> None:
         """Delete documents by vector IDs"""
