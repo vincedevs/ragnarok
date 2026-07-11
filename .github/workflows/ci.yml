@@ -14,8 +14,17 @@ on:
   pull_request:
 
 jobs:
-  test:
+  pipeline:
     runs-on: ubuntu-latest
+    env:
+      OPENAI_API_KEY: 'your_api_key_here'
+      CHAT_MODEL: 'gpt-4.1-mini'
+      EMBEDDING_MODEL: 'text-embedding-3-small'
+      CHROMA_PERSIST_DIRECTORY: 'data/chroma'
+      UPLOAD_DIRECTORY: 'data/uploads'
+      CHUNK_SIZE: '500'
+      CHUNK_OVERLAP: '100'
+      RETRIEVAL_K: '5'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
