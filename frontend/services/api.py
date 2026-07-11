@@ -1,4 +1,5 @@
 from __future__ import annotations
+from pathlib import Path
 
 import httpx
 
@@ -22,6 +23,11 @@ class APIClient:
             return response.status_code == 200
         except httpx.HTTPError:
             return False
+
+    def upload_document(self, filename: Path, content: bytes) -> httpx.Response:
+        return self._client.post(
+            "/upload", files={"file": (filename, content, "application/pdf")}
+        )
 
 
 api = APIClient()
