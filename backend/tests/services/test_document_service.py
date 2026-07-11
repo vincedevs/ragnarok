@@ -1,7 +1,7 @@
 from pathlib import Path
 from unittest.mock import Mock
 
-from backend.app.services.document_services import DocumentService
+from app.services.document_services import DocumentService
 
 
 def test_delete_document_deletes_vectors_and_file(

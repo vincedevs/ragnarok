@@ -1,7 +1,8 @@
-from backend.app.core.config import get_settings
-from backend.app.core.exceptions import DocumentNotFoundError
-from backend.app.repositories.chroma_repository import ChromaRepository
 from loguru import logger
+
+from app.core.config import get_settings
+from app.core.exceptions import DocumentNotFoundError
+from app.repositories.chroma_repository import ChromaRepository
 
 
 class DocumentService:

@@ -1,6 +1,7 @@
-from backend.app.dependencies import DocumentServiceDep
-from backend.app.schemas.document import DocumentResponse
 from fastapi import APIRouter
+
+from app.dependencies import DocumentServiceDep
+from app.schemas.document import DocumentResponse
 
 router = APIRouter(prefix="/documents", tags=["Documents"])
 

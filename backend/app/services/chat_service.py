@@ -1,6 +1,6 @@
-from backend.app.services.llm_service import LLMService
-from backend.app.services.prompt_service import PromptService
-from backend.app.services.retrieval_service import RetrievalService
+from app.services.llm_service import LLMService
+from app.services.prompt_service import PromptService
+from app.services.retrieval_service import RetrievalService
 
 
 class ChatService:

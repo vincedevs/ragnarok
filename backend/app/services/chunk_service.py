@@ -1,5 +1,6 @@
-from backend.app.core.config import get_settings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+
+from app.core.config import get_settings
 
 
 class ChunkService:

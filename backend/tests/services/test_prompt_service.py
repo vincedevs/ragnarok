@@ -1,5 +1,6 @@
-from backend.app.services.prompt_service import PromptService
 from langchain_core.documents import Document
+
+from app.services.prompt_service import PromptService
 
 
 def test_build_creates_prompt_with_context_and_question(

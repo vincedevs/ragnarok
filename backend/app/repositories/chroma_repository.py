@@ -1,7 +1,8 @@
-from backend.app.core.config import get_settings
-from backend.app.services.embedding_service import EmbeddingService
 from langchain_chroma import Chroma
 from langchain_core.documents import Document
+
+from app.core.config import get_settings
+from app.services.embedding_service import EmbeddingService
 
 
 class ChromaRepository:

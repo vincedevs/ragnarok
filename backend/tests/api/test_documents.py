@@ -1,8 +1,9 @@
 from unittest.mock import Mock
 
-from backend.app.dependencies import get_document_service
-from backend.app.main import app
 from fastapi.testclient import TestClient
+
+from app.dependencies import get_document_service
+from app.main import app
 
 
 def test_list_documents(

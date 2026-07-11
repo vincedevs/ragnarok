@@ -1,5 +1,6 @@
-from backend.app.core.config import get_settings
 from langchain_openai import OpenAIEmbeddings
+
+from app.core.config import get_settings
 
 
 class EmbeddingService:

@@ -1,7 +1,8 @@
 from unittest.mock import Mock
 
-from backend.app.services.chat_service import ChatService
 from langchain_core.documents import Document
+
+from app.services.chat_service import ChatService
 
 
 def test_chat_returns_llm_response(

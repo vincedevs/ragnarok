@@ -1,10 +1,11 @@
 from pathlib import Path
 
-from backend.app.repositories.chroma_repository import ChromaRepository
-from backend.app.services.chunk_service import ChunkService
-from backend.app.services.pdf_service import PDFService
 from langchain_core.documents import Document
 from loguru import logger
+
+from app.repositories.chroma_repository import ChromaRepository
+from app.services.chunk_service import ChunkService
+from app.services.pdf_service import PDFService
 
 
 class IngestionService:

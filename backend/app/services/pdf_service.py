@@ -1,7 +1,8 @@
 from pathlib import Path
 
-from backend.app.core.exceptions import InvalidDocumentError
 from langchain_community.document_loaders import PyPDFLoader
+
+from app.core.exceptions import InvalidDocumentError
 
 
 class PDFService:

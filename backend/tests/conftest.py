@@ -2,9 +2,10 @@ from collections.abc import Generator
 from unittest.mock import Mock
 
 import pytest
-from backend.app.main import app
 from fastapi.testclient import TestClient
 from langchain_core.documents import Document
+
+from app.main import app
 
 
 @pytest.fixture

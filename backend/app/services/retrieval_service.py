@@ -1,5 +1,6 @@
-from backend.app.repositories.chroma_repository import ChromaRepository
 from langchain_core.documents import Document
+
+from app.repositories.chroma_repository import ChromaRepository
 
 
 class RetrievalService:

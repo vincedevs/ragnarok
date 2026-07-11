@@ -1,8 +1,9 @@
 from typing import Annotated
 
-from backend.app.dependencies import IngestionServiceDep, StorageServiceDep
-from backend.app.schemas.upload import UploadResponse
 from fastapi import APIRouter, File, HTTPException, UploadFile, status
+
+from app.dependencies import IngestionServiceDep, StorageServiceDep
+from app.schemas.upload import UploadResponse
 
 router = APIRouter(
     prefix="/upload",

@@ -1,18 +1,19 @@
 from functools import lru_cache
 from typing import Annotated
 
-from backend.app.repositories.chroma_repository import ChromaRepository
-from backend.app.services.chat_service import ChatService
-from backend.app.services.chunk_service import ChunkService
-from backend.app.services.document_services import DocumentService
-from backend.app.services.embedding_service import EmbeddingService
-from backend.app.services.ingestion_service import IngestionService
-from backend.app.services.llm_service import LLMService
-from backend.app.services.pdf_service import PDFService
-from backend.app.services.prompt_service import PromptService
-from backend.app.services.retrieval_service import RetrievalService
-from backend.app.services.storage_services import StorageService
 from fastapi import Depends
+
+from app.repositories.chroma_repository import ChromaRepository
+from app.services.chat_service import ChatService
+from app.services.chunk_service import ChunkService
+from app.services.document_services import DocumentService
+from app.services.embedding_service import EmbeddingService
+from app.services.ingestion_service import IngestionService
+from app.services.llm_service import LLMService
+from app.services.pdf_service import PDFService
+from app.services.prompt_service import PromptService
+from app.services.retrieval_service import RetrievalService
+from app.services.storage_services import StorageService
 
 
 @lru_cache

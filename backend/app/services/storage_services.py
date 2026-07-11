@@ -2,9 +2,10 @@ from pathlib import Path
 from shutil import copyfileobj
 from uuid import uuid4
 
-from backend.app.core.config import get_settings
 from fastapi import UploadFile
 from loguru import logger
+
+from app.core.config import get_settings
 
 
 class StorageService:

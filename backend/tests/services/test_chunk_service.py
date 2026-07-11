@@ -1,4 +1,4 @@
-from backend.app.services.chunk_service import ChunkService
+from app.services.chunk_service import ChunkService
 
 
 def test_split_text_returns_multiple_chunks() -> None:

@@ -1,5 +1,6 @@
-from backend.app.core.config import get_settings
 from langchain_openai import ChatOpenAI
+
+from app.core.config import get_settings
 
 
 class LLMService:

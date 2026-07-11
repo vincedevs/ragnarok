@@ -2,9 +2,10 @@ from io import BytesIO
 from pathlib import Path
 from unittest.mock import patch
 
-from backend.app.core.config import Settings
-from backend.app.services.storage_services import StorageService
 from fastapi import UploadFile
+
+from app.core.config import Settings
+from app.services.storage_services import StorageService
 
 
 def test_save_file(tmp_path: Path) -> None:
