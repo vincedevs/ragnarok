@@ -5,6 +5,7 @@ from app.core.config import get_settings
 
 class EmbeddingService:
     """Creates OpenAI embeddings"""
+
     def __init__(self) -> None:
         settings = get_settings()
 

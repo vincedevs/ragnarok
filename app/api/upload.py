@@ -1,3 +1,5 @@
+from typing import Annotated
+
 from fastapi import APIRouter, File, HTTPException, UploadFile, status
 
 from app.schemas.upload import UploadResponse
@@ -10,12 +12,13 @@ router = APIRouter(
 
 storage_service = StorageService()
 
+
 @router.post(
     "",
     response_model=UploadResponse,
     status_code=status.HTTP_201_CREATED,
 )
-async def upload_pdf(file: UploadFile = File(...)) -> UploadResponse:
+async def upload_pdf(file: Annotated[UploadFile, File(...)]) -> UploadResponse:
     """Upload a PDF document"""
     if file.content_type != "application/pdf":
         raise HTTPException(
@@ -29,5 +32,5 @@ async def upload_pdf(file: UploadFile = File(...)) -> UploadResponse:
         document_id=document_id,
         filename=file.filename,
         size_bytes=file.size or 0,
-        content_type=file.content_type
+        content_type=file.content_type,
     )

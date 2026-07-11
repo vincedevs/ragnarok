@@ -7,6 +7,7 @@ from app.services.embedding_service import EmbeddingService
 
 class ChromaRepository:
     """Repository for interacting with Chroma"""
+
     COLLECTION_NAME = "documents"
 
     def __init__(self) -> None:

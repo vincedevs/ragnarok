@@ -2,6 +2,7 @@ from pathlib import Path
 
 from langchain_community.document_loaders import PyPDFLoader
 
+
 class PDFService:
     """Extract text from PDF documents"""
 
