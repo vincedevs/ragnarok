@@ -46,5 +46,10 @@ jobs:
       - name: Check formatting
         run: uv run ruff format --check .
 
+      - name: Create application directories
+        run: |
+          mkdir -p data/uploads
+          mkdir -p data/chroma
+
       - name: Run tests
         run: uv run pytest
