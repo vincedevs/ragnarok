@@ -27,7 +27,7 @@ def test_chat_returns_llm_response(
 
     result = service.chat(sample_question)
 
-    assert result == "ANSWER"
+    assert result == ("ANSWER", sample_documents)
 
     retrieval_service.retrieve.assert_called_once_with(
         sample_question,
