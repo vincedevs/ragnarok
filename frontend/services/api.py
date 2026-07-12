@@ -29,5 +29,11 @@ class APIClient:
             "/upload", files={"file": (filename, content, "application/pdf")}
         )
 
+    def chat(self, question: str) -> httpx.Response:
+        return self._client.post(
+            "/chat",
+            json={"question": question},
+        )
+
 
 api = APIClient()
