@@ -1,17 +1,14 @@
 import streamlit as st
 
-from components.header import render_header
-from components.sidebar import render_sidebar
+from components.page import render_page
 
 
-st.set_page_config(
+render_page(
+    title="⚡ RAGnarok",
+    description="Retrieval-Augmented Generation platform",
     page_title="RAGnarok",
-    page_icon="⚡",
-    layout="wide",
+    icon="⚡",
 )
-
-render_sidebar()
-render_header("⚡ RAGnarok", "Retrieval-Augmented Generation platform")
 
 st.markdown(
     """

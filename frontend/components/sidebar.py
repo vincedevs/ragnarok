@@ -7,7 +7,7 @@ def render_sidebar() -> None:
     """Render the application sidebar"""
     with st.sidebar:
         st.title("⚡ RAGnarok")
-        st.caption("Retrieval-Augmented Generation")
+        st.caption("Retrieval-Augmented Generation platform")
 
         st.divider()
 

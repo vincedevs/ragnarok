@@ -1,15 +1,16 @@
 import httpx
 import streamlit as st
 
-from components.header import render_header
-from components.sidebar import render_sidebar
+from components.page import render_page
+from components.empty_state import render_empty_state
 from services.chat_service import chat_service
 
-st.set_page_config(page_title="Chat", page_icon="💬")
-render_sidebar()
-render_header(
-    "💬 Chat",
-    "Ask questions about your uploaded documents.",
+
+render_page(
+    title="💬 Chat",
+    description="Ask questions about your uploaded documents",
+    page_title="Chat",
+    icon="💬",
 )
 
 if "messages" not in st.session_state:
@@ -18,6 +19,12 @@ if "messages" not in st.session_state:
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
+
+if not st.session_state.messages:
+    render_empty_state(
+        title="Start a conversation",
+        description=("Ask a question about your uploaded documents."),
+    )
 
 question = st.chat_input("Ask a question...")
 

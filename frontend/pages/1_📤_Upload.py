@@ -1,13 +1,16 @@
 import httpx
 import streamlit as st
 
-from components.header import render_header
-from components.sidebar import render_sidebar
+from components.page import render_page
 from services.upload_service import upload_service
 
 
-render_sidebar()
-render_header("📤Upload", "Upload PDF docuiments to build your knowledge base")
+render_page(
+    title="📤 Upload",
+    description="Upload PDF docuiments to build your knowledge base",
+    page_title="Upload",
+    icon="📤",
+)
 
 uploaded_file = st.file_uploader("Select a PDF", type=["pdf"])
 
@@ -21,7 +24,7 @@ if uploaded_file is not None:
                     filename=uploaded_file.name, content=uploaded_file.getvalue()
                 )
 
-                st.success("🏁 Document uploaded successfully!")
+                st.toast("Document uploaded successfully!", icon="✅")
             except httpx.HTTPStatusError as exc:
                 detail = "❌ Upload failed"
 

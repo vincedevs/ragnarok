@@ -1,15 +1,16 @@
 import httpx
 import streamlit as st
 
-from components.header import render_header
-from components.sidebar import render_sidebar
+from components.page import render_page
+from components.empty_state import render_empty_state
 from services.document_service import document_service
 
-st.set_page_config(page_title="Documents", page_icon="📄")
-render_sidebar()
-render_header(
-    "📄 Documents",
-    "Manage uploaded documents.",
+
+render_page(
+    title="📄 Documents",
+    description="Manage uploaded documents",
+    page_title="Documents",
+    icon="📄",
 )
 
 col1, col2 = st.columns([4, 1])
@@ -27,7 +28,13 @@ except Exception as exc:
     st.stop()
 
 if not documents:
-    st.info("No documents have been uploaded yet")
+    render_empty_state(
+        title="No documents uploaded yet",
+        description=(
+            "Upload your first PDF from the **Upload** page "
+            "to start building your knowledge base"
+        ),
+    )
     st.stop()
 
 for document in documents:
@@ -47,7 +54,7 @@ for document in documents:
             ):
                 try:
                     document_service.delete_document(document["document_id"])
-                    st.success(f"Deleted '{document['filename']}'")
+                    st.toast(f"Deleted '{document['filename']}'", icon="✅")
                     st.rerun()
                 except httpx.HTTPStatusError as exc:
                     st.error(exc.response.text)
