@@ -23,8 +23,8 @@ try:
     documents = document_service.list_document()
 except httpx.HTTPStatusError as exc:
     st.error(exc.response.text)
-except Exception as exc:
-    st.error(str(exc))
+except Exception:
+    st.error("An unexpected error was encountered")
     st.stop()
 
 if not documents:
@@ -58,5 +58,5 @@ for document in documents:
                     st.rerun()
                 except httpx.HTTPStatusError as exc:
                     st.error(exc.response.text)
-                except Exception as exc:
-                    st.error(str(exc))
+                except Exception:
+                    st.error("An unexpected error was encountered")

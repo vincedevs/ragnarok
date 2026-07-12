@@ -13,6 +13,13 @@ render_page(
     icon="💬",
 )
 
+col1, col2 = st.columns([6, 1])
+
+with col2:
+    if st.button("🗑️ Clear", use_container_width=True):
+        st.session_state.messages = []
+        st.rerun()
+
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
@@ -23,7 +30,7 @@ for message in st.session_state.messages:
 if not st.session_state.messages:
     render_empty_state(
         title="Start a conversation",
-        description=("Ask a question about your uploaded documents."),
+        description="Ask a question about your uploaded documents",
     )
 
 question = st.chat_input("Ask a question...")
@@ -39,8 +46,8 @@ if question:
             result = chat_service.ask(question)
     except httpx.HTTPStatusError as exc:
         st.error(exc.response.json()["detail"])
-    except Exception as exc:
-        st.error(str(exc))
+    except Exception:
+        st.error("An unexpected error was encountered")
     else:
         st.session_state.messages.append(
             {"role": "assistant", "content": result["answer"]}
@@ -54,6 +61,6 @@ if question:
             if sources:
                 with st.expander("Retrieved Sources", expanded=False):
                     for source in sources:
-                        st.write(
-                            f"📄 {source['filename']} (chunk {source['chunk_index']})"
-                        )
+                        with st.container(border=True):
+                            st.markdown(f"**📄 {source['filename']}**")
+                            st.caption(f"Chunk {source['chunk_index']}")

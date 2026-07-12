@@ -33,5 +33,5 @@ if uploaded_file is not None:
                 except Exception:
                     pass
                 st.error(detail)
-            except Exception as exc:
-                st.error(str(exc))
+            except Exception:
+                st.error("An unexpected error was encountered")
