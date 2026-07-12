@@ -1,4 +1,4 @@
-name: Continuous Integration
+name: RAGnarok CI Pipeline
 
 on:
   push:
@@ -14,8 +14,13 @@ on:
   pull_request:
 
 jobs:
-  pipeline:
+  backend_ci:
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: backend
+
     env:
       OPENAI_API_KEY: 'your_api_key_here'
       CHAT_MODEL: 'gpt-4.1-mini'
@@ -25,6 +30,7 @@ jobs:
       CHUNK_SIZE: '500'
       CHUNK_OVERLAP: '100'
       RETRIEVAL_K: '5'
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6

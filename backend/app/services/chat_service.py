@@ -21,4 +21,6 @@ class ChatService:
         documents = self._retrieval_service.retrieve(question)
         prompt = self._prompt_service.build(question=question, documents=documents)
 
-        return self._llm_service.generate(prompt)
+        answer = self._llm_service.generate(prompt)
+
+        return answer, documents
