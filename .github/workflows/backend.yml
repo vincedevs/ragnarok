@@ -14,7 +14,7 @@ on:
   pull_request:
 
 jobs:
-  pipeline:
+  backend_ci:
     runs-on: ubuntu-latest
     env:
       OPENAI_API_KEY: 'your_api_key_here'
@@ -26,6 +26,9 @@ jobs:
       CHUNK_OVERLAP: '100'
       RETRIEVAL_K: '5'
     steps:
+      - name: Change directory
+        run: cd backend
+
       - name: Checkout repository
         uses: actions/checkout@v6
 
