@@ -35,5 +35,11 @@ class APIClient:
             json={"question": question},
         )
 
+    def list_documents(self) -> httpx.Response:
+        return self._client.get("/documents")
+
+    def delete_documenet(self, document_id: str) -> httpx.Response:
+        return self._client.delete(f"/documents/{document_id}")
+
 
 api = APIClient()
