@@ -24,6 +24,8 @@ def chat(request: ChatRequest, service: ChatServiceDep) -> ChatResponse:
                 document_id=document.metadata["document_id"],
                 filename=document.metadata["filename"],
                 chunk_index=document.metadata["chunk_index"],
+                page_number=document.metadata.get("page_number"),
+                section_heading=document.metadata.get("section_heading"),
             )
             for document in documents
         ],

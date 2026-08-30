@@ -13,6 +13,8 @@ class ChatSource(BaseModel):
     document_id: str
     filename: str
     chunk_index: int
+    page_number: int | None = None
+    section_heading: str | None = None
 
 
 class ChatResponse(BaseModel):

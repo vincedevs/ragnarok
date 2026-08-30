@@ -18,6 +18,8 @@ class Settings(BaseSettings):
     upload_directory: DirectoryPath
     chunk_size: int = 500
     chunk_overlap: int = 100
+    parent_chunk_size: int = 2000
+    child_retrieval_k: int = 15
     retrieval_k: int = 5
 
     model_config = SettingsConfigDict(

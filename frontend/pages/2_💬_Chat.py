@@ -61,4 +61,12 @@ if question:
                     for source in sources:
                         with st.container(border=True):
                             st.markdown(f"**📄 {source['filename']}**")
-                            st.caption(f"Chunk {source['chunk_index']}")
+                            page_number = source.get("page_number")
+                            location = (
+                                f"Page {page_number}"
+                                if page_number
+                                else f"Chunk {source['chunk_index']}"
+                            )
+                            if source.get("section_heading"):
+                                location += f" · {source['section_heading']}"
+                            st.caption(location)

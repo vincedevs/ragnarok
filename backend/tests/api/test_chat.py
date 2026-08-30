@@ -18,6 +18,8 @@ def test_chat_returns_answer(
                 "document_id": "doc-1",
                 "filename": "fastapi.md",
                 "chunk_index": 0,
+                "page_number": 3,
+                "section_heading": "OVERVIEW",
             },
         )
     ]
@@ -41,6 +43,8 @@ def test_chat_returns_answer(
                 "document_id": "doc-1",
                 "filename": "fastapi.md",
                 "chunk_index": 0,
+                "page_number": 3,
+                "section_heading": "OVERVIEW",
             }
         ],
     }
@@ -57,3 +61,24 @@ def test_chat_requires_question(
     )
 
     assert response.status_code == 422
+
+
+def test_chat_supports_legacy_sources_without_page_metadata(
+    client: TestClient,
+    mock_chat_service: Mock,
+) -> None:
+    document = Document(
+        page_content="Legacy content",
+        metadata={
+            "document_id": "doc-1",
+            "filename": "legacy.pdf",
+            "chunk_index": 0,
+        },
+    )
+    mock_chat_service.chat.return_value = ("Legacy answer", [document])
+    app.dependency_overrides[get_chat_service] = lambda: mock_chat_service
+
+    response = client.post("/chat", json={"question": "Legacy question?"})
+
+    assert response.status_code == 200
+    assert response.json()["sources"][0]["page_number"] is None

@@ -22,6 +22,17 @@ class PromptService:
 
     def build(self, question: str, documents: list[Document]) -> PromptValue:
         """Build the prompt"""
-        context = "\n\n".join(document.page_content for document in documents)
+        context_blocks = []
+
+        for document in documents:
+            filename = document.metadata.get("filename", "Unknown document")
+            page_number = document.metadata.get("page_number", "Unknown")
+            section = document.metadata.get("section_heading")
+            source = f"Source: {filename}, page {page_number}"
+            if section:
+                source += f", section: {section}"
+            context_blocks.append(f"[{source}]\n{document.page_content}")
+
+        context = "\n\n".join(context_blocks)
 
         return self._prompt.invoke({"context": context, "question": question})

@@ -26,8 +26,8 @@ class IngestionService:
         """Extract, chunk, and store a PDF document"""
         logger.info(f"Starting ingestion for '{filename}'")
 
-        text = self._pdf_service.extract_text(pdf_path)
-        chunks = self._chunk_service.split_text(text)
+        pages = self._pdf_service.extract_pages(pdf_path)
+        chunks = self._chunk_service.split_pages(pages)
 
         if not chunks:
             raise InvalidDocumentError("The PDF does not contain any indexable text")
@@ -36,14 +36,22 @@ class IngestionService:
 
         documents = [
             Document(
-                page_content=chunk,
+                page_content=chunk.content,
                 metadata={
                     "document_id": document_id,
                     "filename": filename,
-                    "chunk_index": index,
+                    "chunk_index": chunk.chunk_index,
+                    "page_number": chunk.page_number,
+                    "parent_id": f"{document_id}:parent:{chunk.parent_index}",
+                    "parent_content": chunk.parent_content,
+                    **(
+                        {"section_heading": chunk.section_heading}
+                        if chunk.section_heading
+                        else {}
+                    ),
                 },
             )
-            for index, chunk in enumerate(chunks)
+            for chunk in chunks
         ]
 
         self._chroma_repository.add_documents(documents)

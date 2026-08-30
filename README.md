@@ -26,7 +26,7 @@ A **Retrieval-Augmented Generation (RAG)** application built with **FastAPI**, *
 ## Features
 - PDF document ingestion
 - Automatic text extraction
-- Configurable text chunking
+- Page- and section-aware parent-child chunking
 - OpenAI embeddings
 - Persistent Chroma vector database
 - Semantic retrieval
@@ -68,9 +68,9 @@ Services --> OpenAI
 ```mermaid
 flowchart TD
 
-Upload --> PDFParsing --> Chunking --> Embedding --> VectorStore
+Upload --> PDFParsing --> StructuralChunking --> ChildEmbedding --> VectorStore
 
-Question --> SimilaritySearch --> PromptConstruction --> GPT --> Answer
+Question --> ChildSimilaritySearch --> ParentExpansion --> PromptConstruction --> GPT --> Answer
 ```
 
 ## Backend Design
