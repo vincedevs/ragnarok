@@ -33,6 +33,9 @@ A **Retrieval-Augmented Generation (RAG)** application built with **FastAPI**, *
 - Reciprocal Rank Fusion and lightweight parent reranking
 - Per-document search filtering
 - GPT-powered question answering
+- Conversational follow-up query rewriting
+- Inline page citations and matched source excerpts
+- Grounded refusal when retrieval finds insufficient evidence
 - Document management
 - Streamlit frontend
 - REST API

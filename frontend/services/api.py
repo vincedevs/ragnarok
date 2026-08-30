@@ -28,11 +28,18 @@ class APIClient:
         )
 
     def chat(
-        self, question: str, document_ids: list[str] | None = None
+        self,
+        question: str,
+        document_ids: list[str] | None = None,
+        history: list[dict[str, str]] | None = None,
     ) -> httpx.Response:
         return self._client.post(
             "/chat",
-            json={"question": question, "document_ids": document_ids},
+            json={
+                "question": question,
+                "document_ids": document_ids,
+                "history": history or [],
+            },
         )
 
     def list_documents(self) -> httpx.Response:

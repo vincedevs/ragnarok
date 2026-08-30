@@ -16,7 +16,9 @@ router = APIRouter(
 def chat(request: ChatRequest, service: ChatServiceDep) -> ChatResponse:
     """Answer a question using the RAG pipeline"""
     answer, documents = service.chat(
-        request.question, document_ids=request.document_ids
+        request.question,
+        document_ids=request.document_ids,
+        history=[message.model_dump() for message in request.history],
     )
 
     return ChatResponse(
@@ -29,6 +31,12 @@ def chat(request: ChatRequest, service: ChatServiceDep) -> ChatResponse:
                 page_number=document.metadata.get("page_number"),
                 section_heading=document.metadata.get("section_heading"),
                 relevance_score=document.metadata.get("relevance_score"),
+                excerpt=str(
+                    document.metadata.get(
+                        "matched_excerpt",
+                        " ".join(document.page_content.split())[:300],
+                    )
+                ),
             )
             for document in documents
         ],

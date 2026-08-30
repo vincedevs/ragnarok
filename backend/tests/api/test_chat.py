@@ -47,12 +47,13 @@ def test_chat_returns_answer(
                 "page_number": 3,
                 "section_heading": "OVERVIEW",
                 "relevance_score": None,
+                "excerpt": "FastAPI is a web framework.",
             }
         ],
     }
 
     mock_chat_service.chat.assert_called_once_with(
-        "What is FastAPI?", document_ids=None
+        "What is FastAPI?", document_ids=None, history=[]
     )
 
 
@@ -102,5 +103,34 @@ def test_chat_passes_document_filters(
 
     assert response.status_code == 200
     mock_chat_service.chat.assert_called_once_with(
-        "Question?", document_ids=["doc-1", "doc-2"]
+        "Question?", document_ids=["doc-1", "doc-2"], history=[]
     )
+
+
+def test_chat_passes_bounded_history(
+    client: TestClient,
+    mock_chat_service: Mock,
+) -> None:
+    mock_chat_service.chat.return_value = ("Answer", [])
+    app.dependency_overrides[get_chat_service] = lambda: mock_chat_service
+    history = [
+        {"role": "user", "content": "What is zero trust?"},
+        {"role": "assistant", "content": "It is a security model."},
+    ]
+
+    response = client.post(
+        "/chat", json={"question": "How is it implemented?", "history": history}
+    )
+
+    assert response.status_code == 200
+    mock_chat_service.chat.assert_called_once_with(
+        "How is it implemented?", document_ids=None, history=history
+    )
+
+
+def test_chat_rejects_more_than_ten_history_messages(client: TestClient) -> None:
+    history = [{"role": "user", "content": "Previous"}] * 11
+
+    response = client.post("/chat", json={"question": "Question?", "history": history})
+
+    assert response.status_code == 422

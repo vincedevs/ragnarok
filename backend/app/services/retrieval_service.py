@@ -34,6 +34,7 @@ class RetrievalService:
             parent_id = str(child.metadata.get("parent_id", ""))
             metadata = dict(child.metadata)
             parent_content = str(metadata.pop("parent_content", child.page_content))
+            metadata["matched_excerpt"] = " ".join(child.page_content.split())[:300]
             identity = parent_id or self._child_identity(child)
             existing = parent_candidates.get(identity)
 

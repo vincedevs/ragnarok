@@ -2,6 +2,7 @@ import httpx
 import streamlit as st
 from components.empty_state import render_empty_state
 from components.page import render_page
+from components.sources import render_sources
 from services.chat_service import chat_service
 from services.document_service import document_service
 
@@ -40,6 +41,7 @@ selected_document_ids = st.multiselect(
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
+        render_sources(message.get("sources", []))
 
 if not st.session_state.messages:
     render_empty_state(
@@ -50,6 +52,10 @@ if not st.session_state.messages:
 question = st.chat_input("Ask a question...")
 
 if question:
+    history = [
+        {"role": message["role"], "content": message["content"]}
+        for message in st.session_state.messages[-10:]
+    ]
     st.session_state.messages.append({"role": "user", "content": question})
 
     with st.chat_message("user"):
@@ -60,36 +66,22 @@ if question:
             result = chat_service.ask(
                 question,
                 document_ids=selected_document_ids or None,
+                history=history,
             )
     except httpx.HTTPStatusError as exc:
         st.error(exc.response.json()["detail"])
     except Exception:
         st.error("An unexpected error was encountered")
     else:
+        sources = result.get("sources", [])
         st.session_state.messages.append(
-            {"role": "assistant", "content": result["answer"]}
+            {
+                "role": "assistant",
+                "content": result["answer"],
+                "sources": sources,
+            }
         )
 
         with st.chat_message("assistant"):
             st.markdown(result["answer"])
-
-            sources = result.get("sources", [])
-
-            if sources:
-                with st.expander("Retrieved Sources", expanded=False):
-                    for source in sources:
-                        with st.container(border=True):
-                            st.markdown(f"**📄 {source['filename']}**")
-                            page_number = source.get("page_number")
-                            location = (
-                                f"Page {page_number}"
-                                if page_number
-                                else f"Chunk {source['chunk_index']}"
-                            )
-                            if source.get("section_heading"):
-                                location += f" · {source['section_heading']}"
-                            if source.get("relevance_score") is not None:
-                                location += (
-                                    f" · {source['relevance_score']:.0%} rank score"
-                                )
-                            st.caption(location)
+            render_sources(sources)

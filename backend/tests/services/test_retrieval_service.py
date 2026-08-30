@@ -38,6 +38,7 @@ def test_retrieve_expands_and_deduplicates_parent_chunks() -> None:
     assert len(documents) == 1
     assert documents[0].page_content == "complete parent context"
     assert "parent_content" not in documents[0].metadata
+    assert documents[0].metadata["matched_excerpt"] == "matching child one"
     repository.similarity_search.assert_called_once_with(
         query="question", k=20, document_ids=None
     )
