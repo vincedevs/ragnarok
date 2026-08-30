@@ -29,7 +29,9 @@ A **Retrieval-Augmented Generation (RAG)** application built with **FastAPI**, *
 - Page- and section-aware parent-child chunking
 - OpenAI embeddings
 - Persistent Chroma vector database
-- Semantic retrieval
+- Hybrid semantic and BM25 retrieval
+- Reciprocal Rank Fusion and lightweight parent reranking
+- Per-document search filtering
 - GPT-powered question answering
 - Document management
 - Streamlit frontend
@@ -70,7 +72,11 @@ flowchart TD
 
 Upload --> PDFParsing --> StructuralChunking --> ChildEmbedding --> VectorStore
 
-Question --> ChildSimilaritySearch --> ParentExpansion --> PromptConstruction --> GPT --> Answer
+Question --> DenseSearch
+Question --> BM25Search
+DenseSearch --> RankFusion
+BM25Search --> RankFusion
+RankFusion --> ParentExpansion --> Reranking --> PromptConstruction --> GPT --> Answer
 ```
 
 ## Backend Design

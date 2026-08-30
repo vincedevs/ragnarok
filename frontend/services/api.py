@@ -27,10 +27,12 @@ class APIClient:
             "/upload", files={"file": (filename, content, "application/pdf")}
         )
 
-    def chat(self, question: str) -> httpx.Response:
+    def chat(
+        self, question: str, document_ids: list[str] | None = None
+    ) -> httpx.Response:
         return self._client.post(
             "/chat",
-            json={"question": question},
+            json={"question": question, "document_ids": document_ids},
         )
 
     def list_documents(self) -> httpx.Response:

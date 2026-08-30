@@ -3,6 +3,7 @@ import streamlit as st
 from components.empty_state import render_empty_state
 from components.page import render_page
 from services.chat_service import chat_service
+from services.document_service import document_service
 
 render_page(
     title="💬 Chat",
@@ -20,6 +21,21 @@ with col2:
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
+
+try:
+    available_documents = document_service.list_document()
+except Exception:
+    available_documents = []
+
+document_names = {
+    document["document_id"]: document["filename"] for document in available_documents
+}
+selected_document_ids = st.multiselect(
+    "Search specific documents",
+    options=list(document_names),
+    format_func=lambda document_id: document_names[document_id],
+    placeholder="All documents",
+)
 
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
@@ -41,7 +57,10 @@ if question:
 
     try:
         with st.spinner("Thinking..."):
-            result = chat_service.ask(question)
+            result = chat_service.ask(
+                question,
+                document_ids=selected_document_ids or None,
+            )
     except httpx.HTTPStatusError as exc:
         st.error(exc.response.json()["detail"])
     except Exception:
@@ -69,4 +88,8 @@ if question:
                             )
                             if source.get("section_heading"):
                                 location += f" · {source['section_heading']}"
+                            if source.get("relevance_score") is not None:
+                                location += (
+                                    f" · {source['relevance_score']:.0%} rank score"
+                                )
                             st.caption(location)

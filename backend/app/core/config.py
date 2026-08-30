@@ -19,7 +19,9 @@ class Settings(BaseSettings):
     chunk_size: int = 500
     chunk_overlap: int = 100
     parent_chunk_size: int = 2000
-    child_retrieval_k: int = 15
+    hybrid_candidate_k: int = 20
+    rrf_k: int = 60
+    retrieval_score_threshold: float = 0.15
     retrieval_k: int = 5
 
     model_config = SettingsConfigDict(

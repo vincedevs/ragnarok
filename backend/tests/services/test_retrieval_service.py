@@ -31,13 +31,19 @@ def test_retrieve_expands_and_deduplicates_parent_chunks() -> None:
             },
         ),
     ]
+    repository.keyword_search.return_value = []
 
     documents = RetrievalService(repository).retrieve("question")
 
     assert len(documents) == 1
     assert documents[0].page_content == "complete parent context"
     assert "parent_content" not in documents[0].metadata
-    repository.similarity_search.assert_called_once_with(query="question", k=15)
+    repository.similarity_search.assert_called_once_with(
+        query="question", k=20, document_ids=None
+    )
+    repository.keyword_search.assert_called_once_with(
+        query="question", k=20, document_ids=None
+    )
 
 
 def test_retrieve_supports_legacy_chunks_without_parent_metadata() -> None:
@@ -45,6 +51,7 @@ def test_retrieve_supports_legacy_chunks_without_parent_metadata() -> None:
     repository.similarity_search.return_value = [
         Document(page_content="legacy content", metadata={"filename": "old.pdf"})
     ]
+    repository.keyword_search.return_value = []
 
     documents = RetrievalService(repository).retrieve("question")
 
@@ -63,8 +70,41 @@ def test_retrieve_limits_expanded_parent_contexts() -> None:
         )
         for index in range(8)
     ]
+    repository.keyword_search.return_value = []
 
     documents = RetrievalService(repository).retrieve("question")
 
     assert len(documents) == 5
     assert documents[-1].page_content == "parent context 4"
+
+
+def test_retrieve_fuses_keyword_results_and_forwards_filter() -> None:
+    repository = Mock()
+    semantic = Document(
+        page_content="semantic child",
+        metadata={
+            "document_id": "doc-1",
+            "chunk_index": 1,
+            "parent_id": "semantic-parent",
+            "parent_content": "semantic context",
+        },
+    )
+    exact = Document(
+        page_content="ZX-81 exact term",
+        metadata={
+            "document_id": "doc-1",
+            "chunk_index": 2,
+            "parent_id": "exact-parent",
+            "parent_content": "ZX-81 exact term context",
+        },
+    )
+    repository.similarity_search.return_value = [semantic, exact]
+    repository.keyword_search.return_value = [exact]
+
+    documents = RetrievalService(repository).retrieve("ZX-81", ["doc-1"])
+
+    assert documents[0].page_content == "ZX-81 exact term context"
+    assert documents[0].metadata["relevance_score"] == 1.0
+    repository.similarity_search.assert_called_once_with(
+        query="ZX-81", k=20, document_ids=["doc-1"]
+    )

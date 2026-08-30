@@ -18,9 +18,13 @@ class ChatService:
         self._prompt_service = prompt_service
         self._llm_service = llm_service
 
-    def chat(self, question: str) -> tuple[str, list[Document]]:
+    def chat(
+        self, question: str, document_ids: list[str] | None = None
+    ) -> tuple[str, list[Document]]:
         """Answer a user's question"""
-        documents = self._retrieval_service.retrieve(question)
+        documents = self._retrieval_service.retrieve(
+            question, document_ids=document_ids
+        )
         prompt = self._prompt_service.build(question=question, documents=documents)
 
         answer = self._llm_service.generate(prompt)

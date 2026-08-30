@@ -15,7 +15,9 @@ router = APIRouter(
 )
 def chat(request: ChatRequest, service: ChatServiceDep) -> ChatResponse:
     """Answer a question using the RAG pipeline"""
-    answer, documents = service.chat(request.question)
+    answer, documents = service.chat(
+        request.question, document_ids=request.document_ids
+    )
 
     return ChatResponse(
         answer=answer,
@@ -26,6 +28,7 @@ def chat(request: ChatRequest, service: ChatServiceDep) -> ChatResponse:
                 chunk_index=document.metadata["chunk_index"],
                 page_number=document.metadata.get("page_number"),
                 section_heading=document.metadata.get("section_heading"),
+                relevance_score=document.metadata.get("relevance_score"),
             )
             for document in documents
         ],
