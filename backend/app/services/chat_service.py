@@ -1,3 +1,5 @@
+from langchain_core.documents import Document
+
 from app.services.llm_service import LLMService
 from app.services.prompt_service import PromptService
 from app.services.retrieval_service import RetrievalService
@@ -16,7 +18,7 @@ class ChatService:
         self._prompt_service = prompt_service
         self._llm_service = llm_service
 
-    def chat(self, question: str) -> str:
+    def chat(self, question: str) -> tuple[str, list[Document]]:
         """Answer a user's question"""
         documents = self._retrieval_service.retrieve(question)
         prompt = self._prompt_service.build(question=question, documents=documents)

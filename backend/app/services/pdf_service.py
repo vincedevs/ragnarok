@@ -16,8 +16,16 @@ class PDFService:
         except Exception as error:
             raise InvalidDocumentError(str(error)) from error
 
-        return "\n\n".join(
+        text = "\n\n".join(
             document.page_content
             for document in documents
             if document.page_content.strip()
         )
+
+        if not text.strip():
+            raise InvalidDocumentError(
+                "The PDF does not contain extractable text. Scanned PDFs are not "
+                "currently supported."
+            )
+
+        return text

@@ -6,14 +6,18 @@ from app.api.documents import router as documents_router
 from app.api.health import router as health_router
 from app.api.upload import router as upload_router
 from app.core.config import get_settings
-from app.core.exceptions import DocumentNotFoundError, InvalidDocumentError
+from app.core.exceptions import (
+    DocumentIngestionError,
+    DocumentNotFoundError,
+    InvalidDocumentError,
+)
 
 settings = get_settings()
 
 app = FastAPI(
     title="RAGnarok API",
     version="0.1.0",
-    description="A Retrievel-Augmented Generation platform",
+    description="A Retrieval-Augmented Generation platform",
 )
 
 app.include_router(health_router)
@@ -33,7 +37,9 @@ def root() -> dict[str, str]:
 
 
 @app.exception_handler(DocumentNotFoundError)
-async def document_not_found_handler(request: Request, exc: DocumentNotFoundError):
+async def document_not_found_handler(
+    request: Request, exc: DocumentNotFoundError
+) -> JSONResponse:
     return JSONResponse(status_code=404, content={"detail": str(exc)})
 
 
@@ -41,10 +47,21 @@ async def document_not_found_handler(request: Request, exc: DocumentNotFoundErro
 async def invalid_document_handler(
     request: Request,
     exc: InvalidDocumentError,
-):
+) -> JSONResponse:
     return JSONResponse(
         status_code=400,
         content={
             "detail": str(exc),
         },
+    )
+
+
+@app.exception_handler(DocumentIngestionError)
+async def document_ingestion_handler(
+    request: Request,
+    exc: DocumentIngestionError,
+) -> JSONResponse:
+    return JSONResponse(
+        status_code=503,
+        content={"detail": str(exc)},
     )

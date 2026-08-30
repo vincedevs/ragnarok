@@ -17,7 +17,7 @@ class ChromaRepository:
         self._vector_store = Chroma(
             collection_name=self.COLLECTION_NAME,
             embedding_function=embedding_service.embeddings,
-            persist_directory=settings.chroma_persist_directory,
+            persist_directory=str(settings.chroma_persist_directory),
         )
 
     def add_documents(self, documents: list[Document]) -> None:

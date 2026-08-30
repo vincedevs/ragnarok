@@ -1,8 +1,6 @@
 from __future__ import annotations
-from pathlib import Path
 
 import httpx
-
 from config import API_BASE_URL
 
 
@@ -24,7 +22,7 @@ class APIClient:
         except httpx.HTTPError:
             return False
 
-    def upload_document(self, filename: Path, content: bytes) -> httpx.Response:
+    def upload_document(self, filename: str, content: bytes) -> httpx.Response:
         return self._client.post(
             "/upload", files={"file": (filename, content, "application/pdf")}
         )
@@ -38,7 +36,7 @@ class APIClient:
     def list_documents(self) -> httpx.Response:
         return self._client.get("/documents")
 
-    def delete_documenet(self, document_id: str) -> httpx.Response:
+    def delete_document(self, document_id: str) -> httpx.Response:
         return self._client.delete(f"/documents/{document_id}")
 
 

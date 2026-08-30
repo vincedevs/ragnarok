@@ -1,13 +1,11 @@
 import httpx
 import streamlit as st
-
 from components.page import render_page
 from services.upload_service import upload_service
 
-
 render_page(
     title="📤 Upload",
-    description="Upload PDF docuiments to build your knowledge base",
+    description="Upload PDF documents to build your knowledge base",
     page_title="Upload",
     icon="📤",
 )

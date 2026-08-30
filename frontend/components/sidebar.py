@@ -1,5 +1,4 @@
 import streamlit as st
-
 from services.api import api
 
 
@@ -14,4 +13,4 @@ def render_sidebar() -> None:
         if api.health():
             st.success("🟢 Backend Connected")
         else:
-            st.error("🔴 Backed Offline")
+            st.error("🔴 Backend Offline")

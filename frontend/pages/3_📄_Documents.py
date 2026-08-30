@@ -1,10 +1,8 @@
 import httpx
 import streamlit as st
-
-from components.page import render_page
 from components.empty_state import render_empty_state
+from components.page import render_page
 from services.document_service import document_service
-
 
 render_page(
     title="📄 Documents",

@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from langchain_core.documents import Document
+from langchain_core.prompt_values import PromptValue
 from langchain_core.prompts import ChatPromptTemplate
 
 
@@ -19,7 +20,7 @@ class PromptService:
             ]
         )
 
-    def build(self, question: str, documents: list[Document]) -> str:
+    def build(self, question: str, documents: list[Document]) -> PromptValue:
         """Build the prompt"""
         context = "\n\n".join(document.page_content for document in documents)
 

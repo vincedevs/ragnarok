@@ -3,6 +3,7 @@ from pathlib import Path
 from langchain_core.documents import Document
 from loguru import logger
 
+from app.core.exceptions import InvalidDocumentError
 from app.repositories.chroma_repository import ChromaRepository
 from app.services.chunk_service import ChunkService
 from app.services.pdf_service import PDFService
@@ -27,6 +28,9 @@ class IngestionService:
 
         text = self._pdf_service.extract_text(pdf_path)
         chunks = self._chunk_service.split_text(text)
+
+        if not chunks:
+            raise InvalidDocumentError("The PDF does not contain any indexable text")
 
         logger.info(f"Generated {len(chunks)} chunks")
 

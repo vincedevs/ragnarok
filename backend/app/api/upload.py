@@ -1,7 +1,8 @@
 from typing import Annotated
 
-from fastapi import APIRouter, File, HTTPException, UploadFile, status
+from fastapi import APIRouter, File, UploadFile, status
 
+from app.core.exceptions import DocumentIngestionError, InvalidDocumentError
 from app.dependencies import IngestionServiceDep, StorageServiceDep
 from app.schemas.upload import UploadResponse
 
@@ -22,21 +23,28 @@ async def upload_pdf(
     ingestion_service: IngestionServiceDep,
 ) -> UploadResponse:
     """Upload a PDF document"""
-    if file.content_type != "application/pdf":
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Only PDF files are supported",
-        )
+    storage_service.validate_pdf(file)
 
     document_id, path = storage_service.save_file(file)
 
-    ingestion_service.ingest(
-        document_id=document_id, filename=file.filename, pdf_path=path
-    )
+    try:
+        ingestion_service.ingest(
+            document_id=document_id,
+            filename=path.name.removeprefix(f"{document_id}_"),
+            pdf_path=path,
+        )
+    except InvalidDocumentError:
+        storage_service.delete_file(path)
+        raise
+    except Exception as error:
+        storage_service.delete_file(path)
+        raise DocumentIngestionError(
+            "The document could not be indexed. Please try again."
+        ) from error
 
     return UploadResponse(
         document_id=document_id,
-        filename=file.filename,
+        filename=path.name.removeprefix(f"{document_id}_"),
         size_bytes=file.size or 0,
-        content_type=file.content_type,
+        content_type=file.content_type or "application/pdf",
     )

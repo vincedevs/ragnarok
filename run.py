@@ -10,8 +10,8 @@ from __future__ import annotations
 
 import signal
 import subprocess
+import time
 from pathlib import Path
-
 
 ROOT = Path(__file__).resolve().parent
 
@@ -21,6 +21,7 @@ FRONTEND = ROOT / "frontend"
 BACKEND_DATA = BACKEND / "data"
 UPLOADS = BACKEND_DATA / "uploads"
 CHROMA = BACKEND_DATA / "chroma"
+SHUTDOWN_TIMEOUT_SECONDS = 5
 
 
 def ensure_directories() -> None:
@@ -51,6 +52,37 @@ def start_frontend() -> subprocess.Popen:
     return subprocess.Popen(["uv", "run", "streamlit", "run", "Home.py"], cwd=FRONTEND)
 
 
+def stop_process(process: subprocess.Popen) -> None:
+    """Stop a child process, escalating only if graceful shutdown times out."""
+    if process.poll() is not None:
+        return
+
+    process.send_signal(signal.SIGINT)
+
+    try:
+        process.wait(timeout=SHUTDOWN_TIMEOUT_SECONDS)
+    except subprocess.TimeoutExpired:
+        process.terminate()
+
+        try:
+            process.wait(timeout=SHUTDOWN_TIMEOUT_SECONDS)
+        except subprocess.TimeoutExpired:
+            process.kill()
+            process.wait()
+
+
+def wait_for_exit(processes: tuple[subprocess.Popen, ...]) -> int:
+    """Wait until a child exits and return its status code."""
+    while True:
+        for process in processes:
+            return_code = process.poll()
+
+            if return_code is not None:
+                return return_code
+
+        time.sleep(0.25)
+
+
 def main() -> None:
     ensure_directories()
     ensure_env_files()
@@ -58,14 +90,18 @@ def main() -> None:
     backend = start_backend()
     frontend = start_frontend()
 
+    processes = (backend, frontend)
+
     try:
-        backend.wait()
-        frontend.wait()
+        return_code = wait_for_exit(processes)
+
+        if return_code != 0:
+            raise SystemExit(return_code)
     except KeyboardInterrupt:
         print("\nStopping RAGnarok...")
-
-        backend.send_signal(signal.SIGINT)
-        frontend.send_signal(signal.SIGINT)
+    finally:
+        for process in processes:
+            stop_process(process)
 
 
 if __name__ == "__main__":
