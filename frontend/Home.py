@@ -1,7 +1,5 @@
 import streamlit as st
-
 from components.page import render_page
-
 
 render_page(
     title="⚡ RAGnarok",

@@ -1,4 +1,5 @@
 from langchain_openai import OpenAIEmbeddings
+from pydantic import SecretStr
 
 from app.core.config import get_settings
 
@@ -11,7 +12,7 @@ class EmbeddingService:
 
         self._embeddings = OpenAIEmbeddings(
             model=settings.embedding_model,
-            openai_api_key=settings.openai_api_key,
+            api_key=SecretStr(settings.openai_api_key),
         )
 
     @property

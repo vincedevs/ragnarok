@@ -11,7 +11,7 @@ class DocumentService:
         return response.json()
 
     def delete_document(self, document_id: str) -> None:
-        response = api.delete_documenet(document_id)
+        response = api.delete_document(document_id)
         response.raise_for_status()
 
 

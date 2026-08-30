@@ -14,3 +14,6 @@ Guidelines:
 "I don't have enough information in the provided documents to answer that question."
 
 Keep your answer concise and accurate.
+
+Cite factual claims inline using the source labels from the context. Use the format
+`[filename.pdf, p. 3]`. Do not cite a source that does not support the claim.
